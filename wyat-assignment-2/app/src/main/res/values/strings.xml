@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">cse476 app</string>
+    <string name="login_button">Login</string>
+    <string name="username">Username</string>
+    <string name="exercise_button">Add Exercise</string>
+    <string name="add_exercise_title">Add New Exercise</string>
+    <string name="exercise_name_hint">Exercise name</string>
+    <string name="exercise_type_hint">Exercise type</string>
+    <string name="minutes_hint">Minutes</string>
+    <string name="seconds_hint">Seconds</string>
+    <string name="password">Password</string>
+    <string name="welcome_to_the_app">Welcome to the App</string>
+    <string name="login">Login</string>
+    <string name="home">Home</string>
+    <string name="exercise">Exercise</string>
+    <string name="profile">Profile</string>
+    <string name="fantasy_fitness_logo">FantasyFitnessLogo</string>
+    <string-array name="exercise_type">
+        <item>Run</item>
+        <item>Walk</item>
+        <item>Weights</item>
+        <item>Swim</item>
+    </string-array>
+    <string name="welcome_user">Welcome, %1$s!</string>
+    <string name="welcome_default">Welcome to the App</string>
+</resources>
