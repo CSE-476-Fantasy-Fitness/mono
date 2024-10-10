@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Fantasy-Fitness-MVP</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="ff">Fantasy Fitness</string>
+    <string name="ff_logo_desc">Fantasy Fitness application logo</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="name">Name</string>
+    <string name="new_exercise">New Exercise</string>
+    <string name="pwd">Password</string>
+    <string name="run_icon_desc">Run exercise icon</string>
+    <string name="time">Time</string>
+    <string name="type">Type</string>
+    <string name="user_icon_desc">User profile icon</string>
+    <string name="username">Username</string>
+    <string-array name="exercise_types">
+        <item>Run</item>
+        <item>Bike Ride</item>
+        <item>Other</item>
+    </string-array>
+</resources>
