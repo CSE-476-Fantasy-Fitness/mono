@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Fitness Fantasy</string>
+    <string name="welcome_to">Welcome to</string>
+    <string name="welcome">Welcome</string>
+    <string name="new_exercise">New Workout</string>
+    <string name="exercise_name">Enter Exercise Name</string>
+    <string name="duration_prompt">Enter Exercise Duration</string>
+    <string name="exercise_info">Exercise: %1$s\nTime: %2$s\nType: %3$s</string>
+    <string name="create">Create Workout</string>
+    <string name="strongman_image_desc">A muscular cartoon torso flexing</string>
+    <string name="login">Login</string>
+    <string name="new_activity">Create New Activity</string>
+    <string name="enter_username">Enter username</string>
+    <string name="enter_password">Enter password</string>
+    <string name="welcome_message">%1$s !</string>
+    <string name="logout">Logout</string>
+
+    <string-array name="exercise_types">
+        <item>Lift</item>
+        <item>Run</item>
+        <item>Swim</item>
+        <item>Bike</item>
+    </string-array>
+
+</resources>
