@@ -23,4 +23,11 @@
     </string-array>
     <string name="welcome_user">Welcome, %1$s!</string>
     <string name="welcome_default">Welcome to the App</string>
+    <string name="take_profile_picture">Take Profile Picture</string>
+    <string name="must_enable_camera">Camera permission denied. Cannot take profile picture</string>
+    <string name="camera_please_grant_permission">The camera is needed for this feature. Please grant permission."</string>
+    <string name="hello">"Hello: "</string>
+    <string name="show_camera_preview">Show Camera Preview</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="no_cameras_found">No camera found on this device</string>
 </resources>

@@ -1,5 +1,7 @@
 [versions]
 agp = "8.5.2"
+cameraCore = "1.3.4"
+exifinterface = "1.3.7"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -9,6 +11,12 @@ activity = "1.9.2"
 constraintlayout = "2.1.4"
 
 [libraries]
+camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCore" }
+camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraCore" }
+camera-extensions = { module = "androidx.camera:camera-extensions", version.ref = "cameraCore" }
+camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraCore" }
+camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraCore" }
+exifinterface = { module = "androidx.exifinterface:exifinterface", version.ref = "exifinterface" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

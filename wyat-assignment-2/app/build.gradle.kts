@@ -39,4 +39,22 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    // CameraX core library
+    implementation(libs.camera.core)
+
+    // CameraX Camera2 interoperability
+    implementation(libs.camera.camera2)
+
+    // CameraX lifecycle library
+    implementation(libs.camera.lifecycle)
+
+    // CameraX view library for PreviewView
+    implementation(libs.camera.view)
+
+    // CameraX Extensions for advanced features like Bokeh, HDR, etc.
+    implementation(libs.camera.extensions)
+
+    implementation(libs.exifinterface)
+
 }

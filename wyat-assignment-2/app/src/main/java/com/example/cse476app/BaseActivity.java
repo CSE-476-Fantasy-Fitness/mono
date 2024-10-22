@@ -1,10 +1,17 @@
 package com.example.cse476app;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import android.Manifest;
 
 import androidx.annotation.IdRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -16,11 +23,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected BottomNavigationView bottomNavigationView;
-
+    protected static final int REQUEST_CAMERA_PERMISSION = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
     }
+
 
     protected void setupBottomNavigation() {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -56,7 +65,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         updateBottomNavigationSelection();
     }
 
-    private void updateBottomNavigationSelection() {
+    protected void updateBottomNavigationSelection() {
         if (bottomNavigationView != null) {
             bottomNavigationView.setSelectedItemId(getNavigationMenuItemId());
         }

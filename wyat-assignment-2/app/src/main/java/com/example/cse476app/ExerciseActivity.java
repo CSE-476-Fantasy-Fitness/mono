@@ -85,5 +85,11 @@ public class ExerciseActivity extends BaseActivity {
         finish();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateBottomNavigationSelection();
+    }
+
 
 }
