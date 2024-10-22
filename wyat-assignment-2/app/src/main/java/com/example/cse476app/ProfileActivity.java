@@ -9,11 +9,11 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.exifinterface.media.ExifInterface;
 
@@ -25,9 +25,7 @@ import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -36,96 +34,139 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * ProfileActivity class handles the camera functionality, including capturing an image,
+ * applying a blur effect, saving the image, and loading the previously saved image.
+ */
 public class ProfileActivity extends AppCompatActivity {
 
-    private PreviewView previewView;
-    private ImageView profileImage;
-    private Button buttonTakePicture, buttonShowCameraPreview;
+    private PreviewView mPreviewView;
+    private ImageView mProfileImage;
+    private Button mButtonShowCameraPreview;
+    private Button mButtonTakePicture;
+
     private ImageCapture imageCapture;
     private SharedPreferences sharedPreferences;
+
+    // State variable to track the camera preview visibility
     private boolean isPreviewVisible = false;
 
+    // Constant for camera request code
+    private final int CAMERA_REQUEST_CODE = 1;
+
+    // TextView for displaying the username
+    private TextView mTextView;
+
+    /**
+     * Called when the activity is first created. Sets up the layout, initializes components,
+     * checks for saved instance state, and requests necessary permissions.
+     *
+     * @param savedInstanceState Bundle object that contains the activity's previously saved state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitivity_profile);
 
-        // Initialize views
-        previewView = findViewById(R.id.previewView);
-        profileImage = findViewById(R.id.profileImage);
-        buttonTakePicture = findViewById(R.id.buttonTakePicture);
-        buttonShowCameraPreview = findViewById(R.id.buttonShowCameraPreview);
+        // Initialize UI components
+        mPreviewView = findViewById(R.id.previewView);
+        mProfileImage = findViewById(R.id.profileImage);
+        mButtonShowCameraPreview = findViewById(R.id.buttonShowCameraPreview);
+        mButtonTakePicture = findViewById(R.id.buttonTakePicture);
 
-        // Hide the camera preview initially
-        previewView.setVisibility(PreviewView.GONE);
+        mTextView = findViewById(R.id.textViewUsername);
 
-        // Initialize SharedPreferences to save image path
+        // Hide the preview initially
+        mPreviewView.setVisibility(PreviewView.GONE);
+        mButtonTakePicture.setVisibility(PreviewView.GONE);
+        // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE);
 
-        // Load the saved image, if any, on startup
+        // Load the saved image from storage (if available)
         loadSavedImage();
 
+        // Retrieve username from SharedPreferences (if it exists) and set it to TextView
+        String username = sharedPreferences.getString("username", "Guest");
+        mTextView.setText(username);
 
-        // Check if the camera is available on the device
+        // Check if the device has a camera
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
-            Toast.makeText(this, "No camera found on this device", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.no_cameras_found, Toast.LENGTH_SHORT).show();
             finish();
         } else {
-            // Check for camera permissions
+            // Request camera permissions if not granted
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                PermissionUtils.requestPermission(this, 1,
-                        Manifest.permission.CAMERA, false);
+                PermissionUtils.requestPermission(this, CAMERA_REQUEST_CODE, Manifest.permission.CAMERA, false);
             }
-
         }
 
+        // Restore saved state if applicable
         if (savedInstanceState != null) {
             isPreviewVisible = savedInstanceState.getBoolean("preview_visible", false);
             String buttonText = savedInstanceState.getString("button_text", "Show Camera Preview");
-            if (isPreviewVisible)
-            {
+
+            // Restore preview visibility and button text
+            mButtonShowCameraPreview.setText(buttonText);
+            mPreviewView.setVisibility(isPreviewVisible ? PreviewView.VISIBLE : PreviewView.GONE);
+            mButtonTakePicture.setVisibility(isPreviewVisible ? PreviewView.VISIBLE : PreviewView.GONE);
+            // Start the camera if the preview was visible before
+            if (isPreviewVisible) {
                 startCamera();
             }
-            // Restore button text and preview visibility
-            buttonShowCameraPreview.setText(buttonText);
-            previewView.setVisibility(isPreviewVisible ? PreviewView.VISIBLE : PreviewView.GONE);
         }
-
     }
 
-    public void onClickPreview(View view)
-    {
+    /**
+     * Called when the user clicks the "Preview" button. Toggles the visibility of the camera preview.
+     *
+     * @param view The view that was clicked.
+     */
+    public void onClickPreview(View view) {
         toggleCameraPreview();
     }
 
-    public void onClickTakePicture(View view)
-    {
+    /**
+     * Called when the user clicks the "Take Picture" button. Captures an image using the camera.
+     *
+     * @param view The view that was clicked.
+     */
+    public void onClickTakePicture(View view) {
         takePicture();
     }
 
-    // Save instance state
+    /**
+     * Saves the instance state, including whether the camera preview is visible and the button text.
+     *
+     * @param outState Bundle in which to place the saved instance state.
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        // Save the preview visibility state and the button text
         outState.putBoolean("preview_visible", isPreviewVisible);
-        outState.putString("button_text", buttonShowCameraPreview.getText().toString());
+        outState.putString("button_text", mButtonShowCameraPreview.getText().toString());
     }
 
+    /**
+     * Toggles the camera preview visibility and updates the button text.
+     */
     private void toggleCameraPreview() {
         if (isPreviewVisible) {
-            previewView.setVisibility(PreviewView.GONE);
-            buttonShowCameraPreview.setText("Show Camera Preview");
+            mPreviewView.setVisibility(PreviewView.GONE);
+            mButtonTakePicture.setVisibility(PreviewView.GONE);
+            mButtonShowCameraPreview.setText(R.string.show_camera_preview);
             isPreviewVisible = false;
         } else {
-            previewView.setVisibility(PreviewView.VISIBLE);
-            buttonShowCameraPreview.setText("Hide Camera Preview");
+            mPreviewView.setVisibility(PreviewView.VISIBLE);
+            mButtonTakePicture.setVisibility(PreviewView.VISIBLE);
+            mButtonShowCameraPreview.setText(R.string.hide_camera_preview);
             startCamera();
             isPreviewVisible = true;
         }
     }
 
+    /**
+     * Starts the camera and binds the preview and image capture use cases to the lifecycle.
+     */
     private void startCamera() {
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
 
@@ -133,19 +174,22 @@ public class ProfileActivity extends AppCompatActivity {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
 
+                // Set up preview
                 Preview preview = new Preview.Builder().build();
-                preview.setSurfaceProvider(previewView.getSurfaceProvider());
+                preview.setSurfaceProvider(mPreviewView.getSurfaceProvider());
 
+                // Set up image capture
                 imageCapture = new ImageCapture.Builder()
-                        .setTargetRotation(getWindowManager().getDefaultDisplay().getRotation())
                         .build();
 
+                // Select front-facing camera
                 CameraSelector cameraSelector = new CameraSelector.Builder()
-                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                        .requireLensFacing(CameraSelector.LENS_FACING_FRONT)
                         .build();
 
+                // Bind preview and image capture to lifecycle
                 cameraProvider.unbindAll();
-                cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageCapture);
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
 
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
@@ -153,31 +197,33 @@ public class ProfileActivity extends AppCompatActivity {
         }, ContextCompat.getMainExecutor(this));
     }
 
+    /**
+     * Captures a picture, rotates and blurs the image, and saves it to internal storage.
+     */
     private void takePicture() {
         if (imageCapture == null) {
-            Toast.makeText(this, "Camera not ready", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.camera_not_started, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        File photoFile = new File(getExternalFilesDir(null), "profile_picture.jpg");
+        // Create a file to save the image
+        File photoFile = new File(getFilesDir(), "profile_picture.jpg");
         ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(photoFile).build();
 
+        // Take the picture and process the result
         imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(this), new ImageCapture.OnImageSavedCallback() {
             @Override
             public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                // Load the captured image
-                Bitmap capturedImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-
-                // Adjust the image rotation based on EXIF metadata
+                // Rotate the captured image
                 Bitmap rotatedImage = adjustImageRotation(photoFile.getAbsolutePath());
 
-                // Apply blur to the rotated image
+                // Apply blur effect
                 Bitmap blurredImage = applyBlurMaskFilter(rotatedImage);
 
-                // Display the blurred image in the ImageView
-                profileImage.setImageBitmap(blurredImage);
+                // Display the blurred image in ImageView
+                mProfileImage.setImageBitmap(blurredImage);
 
-                // Save the blurred image to internal storage
+                // Save blurred image to internal storage
                 String savedImagePath = saveImageToInternalStorage(blurredImage);
 
                 // Save the image path to SharedPreferences
@@ -185,17 +231,22 @@ public class ProfileActivity extends AppCompatActivity {
                 editor.putString("profileImagePath", savedImagePath);
                 editor.apply();
 
-                Toast.makeText(ProfileActivity.this, "Picture saved!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProfileActivity.this, R.string.picture_saved, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(@NonNull ImageCaptureException exception) {
-                Log.e("CameraX", "Image capture failed: " + exception.getMessage());
                 Toast.makeText(ProfileActivity.this, "Failed to take picture.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    /**
+     * Rotates the image based on EXIF orientation and device rotation.
+     *
+     * @param imagePath The path to the image file.
+     * @return The rotated Bitmap.
+     */
     private Bitmap adjustImageRotation(String imagePath) {
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
         try {
@@ -203,57 +254,38 @@ public class ProfileActivity extends AppCompatActivity {
             int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
             Matrix matrix = new Matrix();
 
+            int rotation = getWindowManager().getDefaultDisplay().getRotation();
+
+            // Rotate based on EXIF data or device rotation
             if (orientation == ExifInterface.ORIENTATION_UNDEFINED) {
-                // If EXIF data is not available, apply manual rotation based on device orientation
-                int rotation = getWindowManager().getDefaultDisplay().getRotation();
-                switch (rotation) {
-                    case Surface.ROTATION_0:
-                        matrix.postRotate(90);  // Default portrait rotation
-                        break;
-                    case Surface.ROTATION_90:
-                        matrix.postRotate(0);   // No rotation needed for landscape
-                        break;
-                    case Surface.ROTATION_180:
-                        matrix.postRotate(270); // Upside down portrait
-                        break;
-                    case Surface.ROTATION_270:
-                        matrix.postRotate(180); // Reverse landscape
-                        break;
-                    default:
-                        matrix.postRotate(0);   // Default to no rotation
-                        break;
+                if (rotation == Surface.ROTATION_0) {
+                    matrix.setRotate(90);
+                } else {
+                    matrix.setRotate(180);
                 }
             } else {
-                // Rotate based on EXIF orientation
-                switch (orientation) {
-                    case ExifInterface.ORIENTATION_ROTATE_90:
-                        matrix.postRotate(90);
-                        break;
-                    case ExifInterface.ORIENTATION_ROTATE_180:
-                        matrix.postRotate(180);
-                        break;
-                    case ExifInterface.ORIENTATION_ROTATE_270:
-                        matrix.postRotate(270);
-                        break;
-                    default:
-                        // No rotation needed
-                        return bitmap;
-                }
+                matrix.postRotate(90);
             }
 
-            // Apply rotation and return the rotated bitmap
+            // Flip because front cameras are mirrored
+            matrix.preScale(-1, 1);
             return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
         } catch (IOException e) {
             e.printStackTrace();
-            // If something goes wrong with EXIF, fallback to default bitmap
             return bitmap;
         }
     }
 
+    /**
+     * Applies a blur effect to the provided Bitmap.
+     *
+     * @param originalBitmap The Bitmap to blur.
+     * @return The blurred Bitmap.
+     */
     private Bitmap applyBlurMaskFilter(Bitmap originalBitmap) {
         Paint paint = new Paint();
-        paint.setMaskFilter(new BlurMaskFilter(50, android.graphics.BlurMaskFilter.Blur.NORMAL));
+        paint.setMaskFilter(new BlurMaskFilter(100, android.graphics.BlurMaskFilter.Blur.NORMAL));
 
         Bitmap blurredBitmap = Bitmap.createBitmap(originalBitmap.getWidth(), originalBitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(blurredBitmap);
@@ -262,6 +294,12 @@ public class ProfileActivity extends AppCompatActivity {
         return blurredBitmap;
     }
 
+    /**
+     * Saves the provided Bitmap to internal storage.
+     *
+     * @param bitmap The Bitmap to save.
+     * @return The path to the saved image file.
+     */
     private String saveImageToInternalStorage(Bitmap bitmap) {
         File directory = getDir("profile_images", MODE_PRIVATE);
         File imageFile = new File(directory, "profile_picture_blurred.jpg");
@@ -275,19 +313,32 @@ public class ProfileActivity extends AppCompatActivity {
         return imageFile.getAbsolutePath();
     }
 
+    /**
+     * Loads the saved image from internal storage and displays it in the ImageView with blur applied.
+     */
     private void loadSavedImage() {
         String savedImagePath = sharedPreferences.getString("profileImagePath", null);
         if (savedImagePath != null) {
             Bitmap savedImage = BitmapFactory.decodeFile(savedImagePath);
-            profileImage.setImageBitmap(savedImage);
+            savedImage = applyBlurMaskFilter(savedImage);
+            mProfileImage.setImageBitmap(savedImage);
         }
     }
 
+    /**
+     * Handles the result of a permission request.
+     *
+     * @param requestCode  The request code passed in requestPermissions().
+     * @param permissions  The requested permissions.
+     * @param grantResults The grant results for the corresponding permissions.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_REQUEST_CODE) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
 
-        if (requestCode == 101 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (PermissionUtils.isPermissionGranted(permissions, grantResults, Manifest.permission.CAMERA)) {
             Toast.makeText(this, "Camera permission granted.", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Camera permission is required.", Toast.LENGTH_SHORT).show();
@@ -295,4 +346,5 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 }
+
 

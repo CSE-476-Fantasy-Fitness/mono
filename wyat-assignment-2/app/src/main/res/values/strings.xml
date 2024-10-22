@@ -30,4 +30,8 @@
     <string name="show_camera_preview">Show Camera Preview</string>
     <string name="take_picture">Take Picture</string>
     <string name="no_cameras_found">No camera found on this device</string>
+    <string name="hide_camera_preview">Hide Camera Preview</string>
+    <string name="camera_not_started">Camera not started</string>
+    <string name="picture_saved">Picture saved!</string>
+    <string name="profile_image">Profile Image</string>
 </resources>
