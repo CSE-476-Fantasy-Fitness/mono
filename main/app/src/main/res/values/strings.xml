@@ -54,6 +54,7 @@
     <string name="empty_username_or_password">Empty username or password.</string>
     <string name="logging_in">Remembered user, logging in.</string>
     <string name="incorrect_username_or_password">Incorrect username or password.</string>
+  <string name="title_activity_maps">MapsActivity</string>
 
 
 </resources>

@@ -39,7 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (itemId == R.id.nav_home) {
             intent = new Intent(this, MainActivity.class);
         } else if (itemId == R.id.nav_exercise) {
-            intent = new Intent(this, ExerciseLocationMap.class);
+            intent = new Intent(this, MapsActivity.class);
         } else if (itemId == R.id.nav_profile) {
             intent = new Intent(this, ProfileActivity.class);
         }
