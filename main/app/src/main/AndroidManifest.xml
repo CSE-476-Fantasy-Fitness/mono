@@ -27,7 +27,7 @@
         <activity
             android:name=".AddExerciseLocation"
             android:exported="false"
-            android:label="@string/title_activity_add_restroom"
+            android:label="@string/title_activity_add_exercise"
             />
         <activity android:name=".ProfileActivity"></activity>
          <meta-data
@@ -38,6 +38,6 @@
                 <activity
             android:name=".ExerciseLocationMap"
             android:exported="false"
-            android:label="@string/title_activity_restroom_maps" />
+            android:label="@string/title_activity_exercise_maps" />
     </application>
 </manifest>

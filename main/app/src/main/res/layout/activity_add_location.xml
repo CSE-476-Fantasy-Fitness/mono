@@ -33,7 +33,7 @@
                         android:layout_margin="20dp"
                         android:layout_span="2"
                         android:gravity="center_horizontal"
-                        android:text="@string/add_restroom_text"
+                        android:text="@string/add_exercise_text"
                         android:textColor="@color/white"
                         android:textSize="34sp"
                         android:textStyle="bold" />
@@ -51,7 +51,7 @@
                     android:layout_margin="20dp"
                     android:layout_span="2"
                     android:gravity="bottom|center_horizontal"
-                    android:text="@string/enter_restroom_info"
+                    android:text="@string/enter_exercise_info"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -74,7 +74,7 @@
                         android:textSize="16sp" />
 
                     <EditText
-                        android:id="@+id/new_restroom_name"
+                        android:id="@+id/new_exercise_name"
                         android:layout_height="wrap_content"
                         android:layout_column="1"
                         android:layout_margin="20dp"
@@ -155,7 +155,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_span="2"
-                        android:onClick="submitRestroom"
+                        android:onClick="submitexercise"
                         android:padding="5dp"
                         android:text="Submit"
                         android:textSize="32dp"

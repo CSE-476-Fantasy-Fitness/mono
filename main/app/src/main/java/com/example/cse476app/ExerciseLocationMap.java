@@ -75,9 +75,9 @@ public class ExerciseLocationMap extends AppCompatActivity implements
 
 
     /**
-     * A pre-registered activity result launcher that will be used to add a restroom to the map.
+     * A pre-registered activity result launcher that will be used to add a exercise to the map.
      */
-    ActivityResultLauncher<Intent> addRestroomFromResult = registerForActivityResult(
+    ActivityResultLauncher<Intent> addExerciseFromResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -85,12 +85,12 @@ public class ExerciseLocationMap extends AppCompatActivity implements
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         assert data != null;
-                        String new_restroom = data.getStringExtra("new_restroom");
-                        assert new_restroom != null;
-                        String[] new_restroom_components = new_restroom.split(":");
-                        String name = new_restroom_components[0];
-                        float latitude = Float.parseFloat(new_restroom_components[1]);
-                        float longitude = Float.parseFloat(new_restroom_components[2]);
+                        String new_exercise = data.getStringExtra("new_exercise");
+                        assert new_exercise != null;
+                        String[] new_exercise_components = new_exercise.split(":");
+                        String name = new_exercise_components[0];
+                        float latitude = Float.parseFloat(new_exercise_components[1]);
+                        float longitude = Float.parseFloat(new_exercise_components[2]);
                         MarkerOptions marker = new MarkerOptions().position(new LatLng(latitude, longitude)).title(name);
                         mMarkers.add(marker);
                         mMap.addMarker(marker);
@@ -99,7 +99,7 @@ public class ExerciseLocationMap extends AppCompatActivity implements
             });
 
     /**
-     * Create the RestroomMaps activity.
+     * Create the exerciseMaps activity.
      * @param savedInstanceState The saved instance state.
      */
     @Override
@@ -293,12 +293,12 @@ public class ExerciseLocationMap extends AppCompatActivity implements
     }
 
     /**
-     * Add a restroom to the map. This will place a marker on the map at the user's current location
+     * Add a exercise to the map. This will place a marker on the map at the user's current location
      * or a passed in location.
-     * @param view The view that was clicked, in this case, our add restroom button.
+     * @param view The view that was clicked, in this case, our add exercise button.
      */
-    public void addRestroom(android.view.View view) {
+    public void addExercise(android.view.View view) {
         Intent intent = new Intent(this, AddExerciseLocation.class);
-        addRestroomFromResult.launch(intent);
+        addExerciseFromResult.launch(intent);
     }
 }
