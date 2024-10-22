@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddExerciseLocation">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#679976">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:stretchColumns="1">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dip"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp"
+                        android:layout_span="2"
+                        android:gravity="center_horizontal"
+                        android:text="@string/add_restroom_text"
+                        android:textColor="@color/white"
+                        android:textSize="34sp"
+                        android:textStyle="bold" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dip"
+                    android:layout_weight="1">
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:layout_span="2"
+                    android:gravity="bottom|center_horizontal"
+                    android:text="@string/enter_restroom_info"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dip">
+
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:layout_margin="20dp"
+                        android:layout_span="1"
+                        android:gravity="start"
+                        android:inputType="text"
+                        android:text="@string/enter_new_name"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/new_restroom_name"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_margin="20dp"
+                        android:alpha="100"
+                        android:background="@color/white"
+                        android:inputType="textNoSuggestions"
+                        android:padding="5dp"
+                        android:text="J. Beal Botanical Gardens Pond"
+                        android:textColor="#000" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dip"
+                    >
+
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:layout_margin="20dp"
+                        android:layout_span="1"
+                        android:gravity="start"
+                        android:inputType="text"
+                        android:text="@string/enter_latitude"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/latitude"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_margin="20dp"
+                        android:alpha="100"
+                        android:background="@color/white"
+                        android:inputType="textNoSuggestions"
+                        android:padding="5dp"
+                        android:text="42.731021"
+                        android:textColor="#000" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dip">
+
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:layout_margin="20dp"
+                        android:layout_span="1"
+                        android:gravity="start"
+                        android:inputType="text"
+                        android:text="@string/enter_longitude"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/longitude"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_margin="20dp"
+                        android:alpha="100"
+                        android:background="@color/white"
+                        android:inputType="textNoSuggestions"
+                        android:padding="5dp"
+                        android:text="-84.484862"
+                        android:textColor="#000" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dip">
+
+                    <Button
+                        android:id="@+id/submit"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_span="2"
+                        android:onClick="submitRestroom"
+                        android:padding="5dp"
+                        android:text="Submit"
+                        android:textSize="32dp"
+                        android:textColor="@color/white" />
+
+                </TableRow>
+            </TableLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
