@@ -38,7 +38,7 @@ import java.util.concurrent.ExecutionException;
  * ProfileActivity class handles the camera functionality, including capturing an image,
  * applying a blur effect, saving the image, and loading the previously saved image.
  */
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends BaseActivity {
 
     private PreviewView mPreviewView;
     private ImageView mProfileImage;
@@ -114,6 +114,13 @@ public class ProfileActivity extends AppCompatActivity {
                 startCamera();
             }
         }
+
+        setupBottomNavigation();
+    }
+
+    @Override
+    protected int getNavigationMenuItemId() {
+        return R.id.nav_profile;
     }
 
     /**
@@ -206,6 +213,9 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
+        // Disable the button to prevent multiple clicks
+        mButtonTakePicture.setEnabled(false);
+
         // Create a file to save the image
         File photoFile = new File(getFilesDir(), "profile_picture.jpg");
         ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(photoFile).build();
@@ -232,6 +242,8 @@ public class ProfileActivity extends AppCompatActivity {
                 editor.apply();
 
                 Toast.makeText(ProfileActivity.this, R.string.picture_saved, Toast.LENGTH_SHORT).show();
+                // Enable button once the picture is saved
+                mButtonTakePicture.setEnabled(true);
             }
 
             @Override
@@ -256,19 +268,29 @@ public class ProfileActivity extends AppCompatActivity {
 
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
 
-            // Rotate based on EXIF data or device rotation
             if (orientation == ExifInterface.ORIENTATION_UNDEFINED) {
+                //This si the case where a surface doesn't exist (we're on an emulator)
+                //The image will always be flipped mirrored regardless of what you do
                 if (rotation == Surface.ROTATION_0) {
-                    matrix.setRotate(90);
+                    matrix.setRotate(270);
                 } else {
                     matrix.setRotate(180);
                 }
             } else {
-                matrix.postRotate(90);
+                //On a real mobile device, images will display without mirroring effect
+                if (ExifInterface.ORIENTATION_ROTATE_270 == orientation) {
+                    matrix.preScale(-1, 1);
+                    matrix.postRotate(90);
+                }
+                else if (ExifInterface.ORIENTATION_ROTATE_180 == orientation) {
+                    matrix.preScale(-1, 1);
+                    matrix.postRotate(180);
+                }
+                else if (ExifInterface.ORIENTATION_ROTATE_90 == orientation) {
+                    matrix.postRotate(0);
+                }
             }
 
-            // Flip because front cameras are mirrored
-            matrix.preScale(-1, 1);
             return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
         } catch (IOException e) {
@@ -285,7 +307,7 @@ public class ProfileActivity extends AppCompatActivity {
      */
     private Bitmap applyBlurMaskFilter(Bitmap originalBitmap) {
         Paint paint = new Paint();
-        paint.setMaskFilter(new BlurMaskFilter(100, android.graphics.BlurMaskFilter.Blur.NORMAL));
+        paint.setMaskFilter(new BlurMaskFilter(200, android.graphics.BlurMaskFilter.Blur.NORMAL));
 
         Bitmap blurredBitmap = Bitmap.createBitmap(originalBitmap.getWidth(), originalBitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(blurredBitmap);
@@ -305,7 +327,7 @@ public class ProfileActivity extends AppCompatActivity {
         File imageFile = new File(directory, "profile_picture_blurred.jpg");
 
         try (FileOutputStream fos = new FileOutputStream(imageFile)) {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -320,7 +342,6 @@ public class ProfileActivity extends AppCompatActivity {
         String savedImagePath = sharedPreferences.getString("profileImagePath", null);
         if (savedImagePath != null) {
             Bitmap savedImage = BitmapFactory.decodeFile(savedImagePath);
-            savedImage = applyBlurMaskFilter(savedImage);
             mProfileImage.setImageBitmap(savedImage);
         }
     }
