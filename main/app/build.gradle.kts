@@ -57,6 +57,9 @@ dependencies {
 
   // Add the dependency for the Firebase SDK for Google Analytics
   implementation("com.google.firebase:firebase-analytics")
+    // Add the dependency for the Firebase Authentication library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-auth")
 
   // TODO: Add the dependencies for any other Firebase products you want to use
   // See https://firebase.google.com/docs/android/setup#available-libraries
