@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Fantasy Fitness</string>
+    <string name="done">Done</string>
+    <string name="exercise">Exercise</string>
+    <string name="exercise_name">Exercise name</string>
+    <string name="exercise_type">Exercise type</string>
+    <string-array name="exercise_types">
+        <item>Run</item>
+        <item>Walk</item>
+        <item>Weights</item>
+        <item>Swim</item>
+    </string-array>
+    <string name="fantasy_fitness_logo">FantasyFitnessLogo</string>
+    <string name="google_maps_key" translatable="false">AIzaSyB7nwomgR9JZJOldjdGsBjnfCpYuNJ-3pc</string>
+    <string name="home">Home</string>
+    <string name="log_exercise">Log Exercise</string>
+    <string name="log_exercise_button">Log Exercise Button</string>
+    <string name="login">Login</string>
+    <string name="minutes">Minutes</string>
+    <string name="password">Password</string>
+    <string name="profile">Profile</string>
+    <string name="seconds">Seconds</string>
+    <string name="username">Username</string>
+    <string name="welcome_default">Welcome to the App</string>
+    <string name="welcome_to_the_app">Welcome to the App</string>
+    <string name="welcome_user">Welcome, %1$s!</string>
+</resources>
