@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_exercise_title"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="16dp" />
+
+    <EditText
+        android:id="@+id/edit_exercise_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/exercise_name_hint"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewTitle"
+        android:layout_margin="16dp"/>
+
+    <Spinner
+        android:id="@+id/spinner_exercise"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_exercise_name"
+        android:layout_margin="16dp" />
+
+    <EditText
+      android:id="@+id/edit_exercise_minutes"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_margin="16dp"
+      android:hint="@string/minutes_hint"
+      android:inputType="number|numberDecimal"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/spinner_exercise" />
+
+    <EditText
+      android:id="@+id/edit_exercise_seconds"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_margin="16dp"
+      android:hint="@string/seconds_hint"
+      android:inputType="number|numberDecimal"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/edit_exercise_minutes" />
+
+    <Button
+        android:id="@+id/buttonAddExercise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/exercise_button"
+        android:onClick="submitExercise"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_exercise_seconds"
+        android:layout_margin="16dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
