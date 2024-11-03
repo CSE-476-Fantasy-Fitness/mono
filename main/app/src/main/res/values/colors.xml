@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="primary_text_color">#212121</color>
+    <color name="secondary_text_color">#757575</color>
+    <color name="body_text_color">#424242</color>
+    <color name="background_color">#F5F5F5</color>
+    <color name="text_color_primary">#333333</color>
+    <color name="button_color">#4CAF50</color>
+    <color name="button_text_color">#FFFFFF</color>
+    <color name="navigation_background">#FFFFFF</color>
+    <color name="navigation_item_color">#333333</color>
+</resources>

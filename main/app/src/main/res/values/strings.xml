@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">cse476 app</string>
+    <string name="login_button">Login</string>
+    <string name="username">Username</string>
+    <string name="exercise_button">Add Exercise</string>
+    <string name="add_exercise_title">Add New Exercise</string>
+    <string name="exercise_name_hint">Exercise name</string>
+    <string name="exercise_type_hint">Exercise type</string>
+    <string name="minutes_hint">Minutes</string>
+    <string name="seconds_hint">Seconds</string>
+    <string name="password">Password</string>
+    <string name="welcome_to_the_app">Welcome to the App</string>
+    <string name="login">Login</string>
+    <string name="home">Home</string>
+    <string name="exercise">Exercise</string>
+    <string name="profile">Profile</string>
+    <string name="fantasy_fitness_logo">FantasyFitnessLogo</string>
+    <string-array name="exercise_type">
+        <item>Run</item>
+        <item>Walk</item>
+        <item>Weights</item>
+        <item>Swim</item>
+    </string-array>
+    <string name="welcome_user">Welcome, %1$s!</string>
+    <string name="welcome_default">Welcome to the App</string>
+    <string name="location_permission_denied">Location is denied access. Please enable location based permissions.</string>
+    <string name="permission_required_toast">Permission for location is required.</string>
+    <string name="permission_rationale_location">Access to the location service is required to demonstrate the map feature, which helps find nearby exercises based on your location.</string>
+
+    <string name="userName">Username</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="title_activity_exercise_map">exerciseMap</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_exercise_maps">exerciseMaps</string>
+    <string name="add_exercise_button_description">Add an item\n</string>
+    <string name="add_exercise_text">Add a exercise</string>
+    <string name="enter_latitude">Latitude:</string>
+    <string name="title_activity_add_exercise">Addexercise</string>
+    <string name="enter_longitude">Longitude:</string>
+    <string name="submit_exercise">Submit</string>
+    <string name="enter_new_name">Name:</string>
+    <string name="enter_exercise_info">Name can be any non-empty entry.
+        Lat/Long must be in decimal degree format
+        where there are six digits after the decimal.</string>
+    <string name="bad_new_exercise_entry">Invalid entry. Confirm inputs are in correct format.</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="incorrect_password">Incorrect password.</string>
+    <string name="empty_username_or_password">Empty username or password.</string>
+    <string name="logging_in">Remembered user, logging in.</string>
+    <string name="incorrect_username_or_password">Incorrect username or password.</string>
+  <string name="title_activity_maps">MapsActivity</string>
+
+
+</resources>
