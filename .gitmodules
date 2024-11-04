@@ -1,3 +1,6 @@
 [submodule "ryann-assignment-2"]
 	path = ryann-assignment-2
 	url = https://github.com/ryannseymour/FantasyFitness.git
+[submodule "ryann-assignment-3"]
+	path = ryann-assignment-3
+	url = https://github.com/ryannseymour/Assignment-3.git
