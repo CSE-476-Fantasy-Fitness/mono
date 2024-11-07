@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
             editor.apply();
 
             // Navigate to MainActivity (this is basically acting like they are logged in).
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, BaseActivity.class);
             startActivity(intent);
             finish();
         } else {
