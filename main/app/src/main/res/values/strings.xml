@@ -24,4 +24,7 @@
     <string name="welcome_default">Welcome to the App</string>
     <string name="welcome_to_the_app">Welcome to the App</string>
     <string name="welcome_user">Welcome, %1$s!</string>
+    <string name="unknown_location">Unknown Location\n</string>
+    <string name="enter_workout_location">Enter Workout Location</string>
+    <string name="update_map_button_desc">Update map\n</string>
 </resources>

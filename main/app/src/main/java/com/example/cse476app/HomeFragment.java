@@ -69,15 +69,18 @@ public class HomeFragment extends Fragment {
 
             for (String detail : exerciseSet) {
                 if (!detail.equals(exerciseName)) {
-                    if (detail.matches("S\\d+")) {
+                    if (detail.startsWith("S")) {
                         exerciseInfo.append("Seconds: ").append(detail.substring(1)).append("\n");
-                    } else if (detail.matches("M\\d+")) {
+                    } else if (detail.startsWith("M")) {
                         exerciseInfo.append("Minutes: ").append(detail.substring(1)).append("\n");
+                    } else if (detail.startsWith("L")) {
+                        exerciseInfo.append("Location: ").append(detail.substring(1)).append("\n");
                     } else {
                         exerciseInfo.append("Type: ").append(detail).append("\n");
                     }
                 }
             }
+            
             exerciseView.setText(exerciseInfo.toString());
             exerciseList.addView(exerciseView);
         }
