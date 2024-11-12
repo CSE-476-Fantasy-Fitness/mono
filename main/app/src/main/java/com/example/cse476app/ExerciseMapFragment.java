@@ -1,7 +1,11 @@
 package com.example.cse476app;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -24,6 +28,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 public class ExerciseMapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -74,12 +85,68 @@ public class ExerciseMapFragment extends Fragment implements OnMapReadyCallback 
         mMap = googleMap;
         enableMyLocation();
 
-        LatLng spartyStatue = new LatLng(42.731159, -84.487433);
-        mMap.addMarker(new MarkerOptions().position(spartyStatue).title("Sparty Statue"));
-        if (!mMap.isMyLocationEnabled()) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(spartyStatue, ZOOM_LEVEL_INIT));
+        // Add markers for exercises
+        addExerciseMarkers();
+    }
+
+    private Map<String, Set<String>> getAllExercises() {
+        SharedPreferences prefs = requireActivity().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+        Map<String, ?> allEntries = prefs.getAll();
+        Map<String, Set<String>> exercises = new HashMap<>();
+
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            if (entry.getValue() instanceof Set) {
+                exercises.put(entry.getKey(), (Set<String>) entry.getValue());
+            }
+        }
+        return exercises;
+    }
+
+    private void addExerciseMarkers() {
+        Map<String, Set<String>> exercises = getAllExercises();
+
+        if (exercises.isEmpty()) {
+            Toast.makeText(requireContext(), "No exercises found.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
+
+        for (Map.Entry<String, Set<String>> entry : exercises.entrySet()) {
+            String exerciseName = entry.getKey();
+            Set<String> exerciseData = entry.getValue();
+
+            String locationString = null;
+            for (String data : exerciseData) {
+                if (data.startsWith("L")) {
+                    locationString = data.substring(1); // Remove the "L" prefix
+                    break;
+                }
+            }
+
+            if (locationString != null) {
+                try {
+                    List<Address> addressList = geocoder.getFromLocationName(locationString, 1);
+                    if (addressList != null && !addressList.isEmpty()) {
+                        Address location = addressList.get(0);
+                        double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
+
+                        LatLng exerciseLocation = new LatLng(latitude, longitude);
+
+                        // Add a marker for this exercise
+                        mMap.addMarker(new MarkerOptions()
+                                .position(exerciseLocation)
+                                .title(exerciseName)
+                                .snippet(locationString));
+                    }
+                } catch (IOException e) {
+                    Toast.makeText(requireContext(), "Error finding address for " + exerciseName, Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
+
 
     @SuppressLint("MissingPermission")
     private void enableMyLocation() {
