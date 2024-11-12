@@ -11,7 +11,7 @@
         <item>Swim</item>
     </string-array>
     <string name="fantasy_fitness_logo">FantasyFitnessLogo</string>
-    <string name="google_maps_key" translatable="false">AIzaSyB7nwomgR9JZJOldjdGsBjnfCpYuNJ-3pc</string>
+    <string name="google_maps_key" translatable="false">ExampleAPIKey</string>
     <string name="home">Home</string>
     <string name="log_exercise">Log Exercise</string>
     <string name="log_exercise_button">Log Exercise Button</string>
