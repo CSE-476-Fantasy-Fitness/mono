@@ -9,8 +9,14 @@ activity = "1.9.2"
 constraintlayout = "2.1.4"
 playServicesMaps = "19.0.0"
 playServicesLocation = "21.3.0"
+cameraView = "1.4.0"
+exifinterface = "1.3.7"
+cameraLifecycle = "1.4.0"
 
 [libraries]
+camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraView" }
+camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraView" }
+camera-extensions = { module = "androidx.camera:camera-extensions", version.ref = "cameraView" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -20,6 +26,9 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "cameraView" }
+exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface" }
+camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "cameraLifecycle" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
