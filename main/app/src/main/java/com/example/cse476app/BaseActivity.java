@@ -23,27 +23,17 @@ import com.google.firebase.database.FirebaseDatabase;
 public class BaseActivity extends AppCompatActivity {
 
     protected BottomNavigationView bottomNavigationView;
-    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        FirebaseApp.initializeApp(this);
-
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_base);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setApplicationId("1:267773612973:android:ca81d5d09a43b168064724")
-                .setApiKey("AIzaSyBfy1QBurX2hpq5abTak_Dg59SjgEro_CQ") // Web API Key from your screenshot
-                .setProjectId("cse476-4ad07")                      // Project ID from your screenshot
-                .build();
-
-        // Check if FirebaseApp is already initialized to avoid duplicate initialization
-        if (FirebaseApp.getApps(this).isEmpty()) {
-            FirebaseApp.initializeApp(this, options);
-        }
+        // Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+        myRef.setValue("Hello, World!");
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.base), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -68,11 +58,6 @@ public class BaseActivity extends AppCompatActivity {
 
             return loadFragment(selectedFragment);
         });
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
-
-        myRef.setValue("Hello, World!");
-//        writeNewUser("hello", "there", "wsoule679@gmail.com");
     }
 
     public boolean loadFragment(Fragment fragment) {
@@ -85,8 +70,4 @@ public class BaseActivity extends AppCompatActivity {
         }
         return false;
     }
-    public void writeNewUser(String userId, String name, String email) {
-
-        mDatabase.child("testing").child("test2").child("another");
-}
 }

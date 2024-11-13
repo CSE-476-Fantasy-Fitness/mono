@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
-      id("com.google.gms.google-services")
-
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -59,7 +58,6 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
-
 }
 
 
