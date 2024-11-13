@@ -1,10 +1,7 @@
 package com.example.cse476app;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -32,17 +29,23 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class ExerciseLogFragment extends Fragment implements OnMapReadyCallback {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private FusedLocationProviderClient fusedLocationClient;
     private EditText editExerciseName;
     private Spinner spinnerExerciseType;
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDbRef;
     private EditText editExerciseMinutes;
     private EditText editExerciseSeconds;
     private EditText editWorkoutLocation;
@@ -54,11 +57,14 @@ public class ExerciseLogFragment extends Fragment implements OnMapReadyCallback 
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_exercise_log, container, false);
 
+        mAuth = FirebaseAuth.getInstance();
+        mDbRef = FirebaseDatabase.getInstance().getReference();
+
         editExerciseName = view.findViewById(R.id.edit_exercise_name);
         spinnerExerciseType = view.findViewById(R.id.spinner_exercise);
         editExerciseMinutes = view.findViewById(R.id.edit_exercise_minutes);
         editExerciseSeconds = view.findViewById(R.id.edit_exercise_seconds);
-        editWorkoutLocation = view.findViewById(R.id.edit_workout_location);
+        editWorkoutLocation = view.findViewById(R.id.edit_exercise_location);
         mapView = view.findViewById(R.id.map_view);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
@@ -216,25 +222,32 @@ public class ExerciseLogFragment extends Fragment implements OnMapReadyCallback 
         String exerciseType = spinnerExerciseType.getSelectedItem().toString();
         String exerciseMinutes = editExerciseMinutes.getText().toString();
         String exerciseSeconds = editExerciseSeconds.getText().toString();
-        String workoutLocation = editWorkoutLocation.getText().toString();
+        String exerciseLocation = editWorkoutLocation.getText().toString();
 
-        if (exerciseName.isEmpty() || exerciseMinutes.isEmpty() || exerciseSeconds.isEmpty() || workoutLocation.isEmpty()) {
+        if (exerciseName.isEmpty() || exerciseMinutes.isEmpty() || exerciseSeconds.isEmpty() || exerciseLocation.isEmpty()) {
             Toast.makeText(requireActivity(), "All Values are required.", Toast.LENGTH_SHORT).show();
             return;
         }
-        // Add exercise to SharedPreferences.
-        SharedPreferences prefs = requireActivity().getSharedPreferences("AppPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
 
-        // Create a set for the exercise, consisting of the exercise name, type, minutes, and seconds.
-        HashSet<String> exerciseSet = new HashSet<>();
-        exerciseSet.add(exerciseName);
-        exerciseSet.add(exerciseType);
-        exerciseSet.add("M" + exerciseMinutes);
-        exerciseSet.add("S" + exerciseSeconds);
-        exerciseSet.add("L" + workoutLocation);
-        editor.putStringSet(exerciseName, exerciseSet);
-        editor.apply();
+        // Get reference to exercise list from our Firebase Realtime Database instance
+        DatabaseReference exercises = mDbRef.child("exercises");
+        String key = exercises.push().getKey();
+
+        // Create a map for the exercise consisting of the user id, exercise name, type, location, minutes, and seconds.
+        Map<String, String> exerciseMap = new HashMap<>();
+        exerciseMap.put("userId", mAuth.getUid());
+        exerciseMap.put("exerciseName", exerciseName);
+        exerciseMap.put("exerciseType", exerciseType);
+        exerciseMap.put("exerciseMinutes", exerciseMinutes);
+        exerciseMap.put("exerciseSeconds", exerciseSeconds);
+        exerciseMap.put("exerciseLocation", exerciseLocation);
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/exercises/" + key, exerciseMap);
+        childUpdates.put("/user-exercises/" + mAuth.getUid() + "/" + key, exerciseMap);
+
+        // Push changes to db instance
+        mDbRef.updateChildren(childUpdates);
 
         // Go back to the main activity.
         BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);

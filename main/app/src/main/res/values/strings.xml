@@ -24,7 +24,7 @@
     <string name="welcome_to_the_app">Welcome to the App</string>
     <string name="welcome_user">Welcome, %1$s!</string>
     <string name="unknown_location">Unknown Location\n</string>
-    <string name="enter_workout_location">Enter Workout Location</string>
+    <string name="enter_exercise_location">Enter Exercise Location</string>
     <string name="update_map_button_desc">Update map\n</string>
     <string name="take_profile_picture">Take Profile Picture</string>
     <string name="must_enable_camera">Camera permission denied. Cannot take profile picture</string>

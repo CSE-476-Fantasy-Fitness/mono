@@ -62,12 +62,12 @@
         app:layout_constraintTop_toTopOf="@+id/edit_exercise_minutes" />
 
     <EditText
-        android:id="@+id/edit_workout_location"
+        android:id="@+id/edit_exercise_location"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="@string/enter_workout_location"
+        android:hint="@string/enter_exercise_location"
         android:inputType="textPostalAddress"
         app:layout_constraintEnd_toStartOf="@+id/button_update_map"
         app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +81,7 @@
         android:background="@android:drawable/ic_menu_search"
         android:contentDescription="@string/update_map_button_desc"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/edit_workout_location"
+        app:layout_constraintStart_toEndOf="@+id/edit_exercise_location"
         app:layout_constraintTop_toBottomOf="@+id/edit_exercise_seconds" />
 
     <com.google.android.gms.maps.MapView
@@ -92,7 +92,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_workout_location" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_exercise_location" />
 
     <Button
         android:id="@+id/buttonAddExercise"
