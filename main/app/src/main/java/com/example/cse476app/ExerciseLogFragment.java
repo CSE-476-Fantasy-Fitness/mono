@@ -31,6 +31,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -236,7 +237,10 @@ public class ExerciseLogFragment extends Fragment implements OnMapReadyCallback 
         editor.apply();
 
         // Go back to the main activity.
+        BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
         HomeFragment home = new HomeFragment();
         ((BaseActivity) requireActivity()).loadFragment(home);
+
     }
 }
