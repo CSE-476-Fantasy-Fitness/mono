@@ -34,25 +34,29 @@ public class HomeFragment extends Fragment {
 private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        user = mAuth.getCurrentUser();
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+@Override
+public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                         Bundle savedInstanceState) {
+    mAuth = FirebaseAuth.getInstance();
+    mDatabase = FirebaseDatabase.getInstance().getReference();
+    user = mAuth.getCurrentUser();
 
-        welcomeText = view.findViewById(R.id.title);
-        exerciseList = view.findViewById(R.id.exercise_list);
+    View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        displayUsername();
-        displayExercises();
+    welcomeText = view.findViewById(R.id.title);
+    exerciseList = view.findViewById(R.id.exercise_list);
 
-        Button loginButton = view.findViewById(R.id.loginButton);
-        loginButton.setOnClickListener(this::goToLogin);
+    Button loginButton = view.findViewById(R.id.loginButton);
+    loginButton.setOnClickListener(this::goToLogin);
 
-        return view;
-    }
+    return view;
+}    @Override
+
+public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    displayUsername();
+    displayExercises();
+}
 
     private void displayUsername() {
         SharedPreferences prefs = requireActivity().getSharedPreferences("AppPrefs", MODE_PRIVATE);
@@ -64,7 +68,9 @@ private DatabaseReference mDatabase;
         }
     }
 
-    private void displayExercises() {
+
+    // Fetch exercises from Firebase
+private void displayExercises() {
     exerciseList.removeAllViews();
 
     // Fetch exercises from Firebase
@@ -73,7 +79,7 @@ private DatabaseReference mDatabase;
             Log.e("firebase", "Error getting data", task.getException());
         } else {
             DataSnapshot snapshot = task.getResult();
-            if (snapshot.exists()) {
+            if (snapshot.exists() && isAdded()) {  // Check if fragment is attached
                 for (DataSnapshot exerciseSnapshot : snapshot.getChildren()) {
                     Map<String, Object> exerciseData = (Map<String, Object>) exerciseSnapshot.getValue();
                     if (exerciseData != null) {
@@ -83,7 +89,7 @@ private DatabaseReference mDatabase;
                         String exerciseMinutes = (String) exerciseData.get("exerciseMinutes");
                         String exerciseSeconds =  (String) exerciseData.get("exerciseSeconds");
 
-//                         Create TextView for each exercise
+                        // Create TextView for each exercise
                         TextView exerciseView = new TextView(requireActivity());
                         exerciseView.setPadding(16, 16, 16, 16);
 
@@ -93,20 +99,19 @@ private DatabaseReference mDatabase;
                                     .append("Location: ").append(exerciseLocation).append("\n")
                                     .append("Minutes: ").append(exerciseMinutes).append("\n")
                                     .append("Seconds: ").append(exerciseSeconds).append("\n");
-//                         Set the formatted text to the TextView
+                        // Set the formatted text to the TextView
                         exerciseView.setText(exerciseInfo.toString());
 
                         // Add TextView to the layout
                         exerciseList.addView(exerciseView);
                     }
                 }
-            } else {
+            } else if (!snapshot.exists()) {
                 Log.d("firebase", "No exercises found.");
             }
         }
     });
 }
-
 
     public void goToLogin(View view) {
         Intent intent = new Intent(requireActivity(), LoginActivity.class);
