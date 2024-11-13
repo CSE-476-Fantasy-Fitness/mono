@@ -21,6 +21,7 @@ cameraLifecycle = "1.4.0"
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-database = { module = "com.google.firebase:firebase-database" }
+firebase-storage = { module = "com.google.firebase:firebase-storage" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraView" }
 camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraView" }
