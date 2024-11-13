@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +17,29 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Map;
 import java.util.Set;
 
 public class HomeFragment extends Fragment {
     private TextView welcomeText;
     private LinearLayout exerciseList;
-
+private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        user = mAuth.getCurrentUser();
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         welcomeText = view.findViewById(R.id.title);
@@ -50,41 +65,48 @@ public class HomeFragment extends Fragment {
     }
 
     private void displayExercises() {
-        exerciseList.removeAllViews();
-        SharedPreferences prefs = requireActivity().getSharedPreferences("AppPrefs", MODE_PRIVATE);
-        Map<String, ?> allEntries = prefs.getAll();
-        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-            if (!(entry.getValue() instanceof Set)) {
-                continue;
-            }
+    exerciseList.removeAllViews();
 
-            Set<String> exerciseSet = (Set<String>) entry.getValue();
-            String exerciseName = entry.getKey();
+    // Fetch exercises from Firebase
+    mDatabase.child("exercises").get().addOnCompleteListener(task -> {
+        if (!task.isSuccessful()) {
+            Log.e("firebase", "Error getting data", task.getException());
+        } else {
+            DataSnapshot snapshot = task.getResult();
+            if (snapshot.exists()) {
+                for (DataSnapshot exerciseSnapshot : snapshot.getChildren()) {
+                    Map<String, Object> exerciseData = (Map<String, Object>) exerciseSnapshot.getValue();
+                    if (exerciseData != null) {
+                        String exerciseName = (String) exerciseData.get("exerciseName");
+                        String exerciseType = (String) exerciseData.get("exerciseType");
+                        String exerciseLocation = (String) exerciseData.get("exerciseLocation");
+                        String exerciseMinutes = (String) exerciseData.get("exerciseMinutes");
+                        String exerciseSeconds =  (String) exerciseData.get("exerciseSeconds");
 
-            TextView exerciseView = new TextView(requireActivity());
-            exerciseView.setPadding(16, 16, 16, 16);
+//                         Create TextView for each exercise
+                        TextView exerciseView = new TextView(requireActivity());
+                        exerciseView.setPadding(16, 16, 16, 16);
 
-            StringBuilder exerciseInfo = new StringBuilder();
-            exerciseInfo.append("Exercise: ").append(exerciseName).append("\n");
+                        StringBuilder exerciseInfo = new StringBuilder();
+                        exerciseInfo.append("Exercise: ").append(exerciseName).append("\n")
+                                    .append("Type: ").append(exerciseType).append("\n")
+                                    .append("Location: ").append(exerciseLocation).append("\n")
+                                    .append("Minutes: ").append(exerciseMinutes).append("\n")
+                                    .append("Seconds: ").append(exerciseSeconds).append("\n");
+//                         Set the formatted text to the TextView
+                        exerciseView.setText(exerciseInfo.toString());
 
-            for (String detail : exerciseSet) {
-                if (!detail.equals(exerciseName)) {
-                    if (detail.startsWith("S")) {
-                        exerciseInfo.append("Seconds: ").append(detail.substring(1)).append("\n");
-                    } else if (detail.startsWith("M")) {
-                        exerciseInfo.append("Minutes: ").append(detail.substring(1)).append("\n");
-                    } else if (detail.startsWith("L")) {
-                        exerciseInfo.append("Location: ").append(detail.substring(1)).append("\n");
-                    } else {
-                        exerciseInfo.append("Type: ").append(detail).append("\n");
+                        // Add TextView to the layout
+                        exerciseList.addView(exerciseView);
                     }
                 }
+            } else {
+                Log.d("firebase", "No exercises found.");
             }
-            
-            exerciseView.setText(exerciseInfo.toString());
-            exerciseList.addView(exerciseView);
         }
-    }
+    });
+}
+
 
     public void goToLogin(View view) {
         Intent intent = new Intent(requireActivity(), LoginActivity.class);
