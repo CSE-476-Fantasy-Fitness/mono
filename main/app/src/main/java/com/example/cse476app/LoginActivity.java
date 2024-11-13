@@ -27,10 +27,17 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText editUsername, editEmail, editPassword;
     private FirebaseAuth mAuth;
+    private DatabaseReference mDbRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,17 +72,24 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Registration successful
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        Toast.makeText(LoginActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
-                        updateUI(user);
-                    } else {
-                        // Registration failed
-                        Toast.makeText(LoginActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+            .addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    // Registration successful
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    Toast.makeText(LoginActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
+                    updateUI(user);
+                } else {
+                    // Registration failed
+                    Toast.makeText(LoginActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        mDbRef = FirebaseDatabase.getInstance().getReference();
+        Map<String, String> userMap = new HashMap<>();
+        userMap.put("username", editUsername.getText().toString().trim());
+
+        // Push user to db instance
+        mDbRef.child("users").child(Objects.requireNonNull(mAuth.getUid())).setValue(userMap);
     }
 
     // Method for logging in an existing user

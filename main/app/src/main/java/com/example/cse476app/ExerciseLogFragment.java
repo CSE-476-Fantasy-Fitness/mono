@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class ExerciseLogFragment extends Fragment implements OnMapReadyCallback {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -236,6 +237,7 @@ public class ExerciseLogFragment extends Fragment implements OnMapReadyCallback 
         // Create a map for the exercise consisting of the user id, exercise name, type, location, minutes, and seconds.
         Map<String, String> exerciseMap = new HashMap<>();
         exerciseMap.put("userId", mAuth.getUid());
+        exerciseMap.put("username", Objects.requireNonNull(mAuth.getCurrentUser()).getEmail());
         exerciseMap.put("exerciseName", exerciseName);
         exerciseMap.put("exerciseType", exerciseType);
         exerciseMap.put("exerciseMinutes", exerciseMinutes);
