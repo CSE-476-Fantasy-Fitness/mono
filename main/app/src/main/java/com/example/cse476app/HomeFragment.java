@@ -93,6 +93,7 @@ public class HomeFragment extends Fragment {
                             String exerciseLocation = (String) exerciseData.get("exerciseLocation");
                             String exerciseMinutes = (String) exerciseData.get("exerciseMinutes");
                             String exerciseSeconds =  (String) exerciseData.get("exerciseSeconds");
+                            String exerciseUsername = (String) exerciseData.get("username");
 
                             // Create TextView for each exercise
                             TextView exerciseView = new TextView(requireActivity());
@@ -100,6 +101,7 @@ public class HomeFragment extends Fragment {
 
                             StringBuilder exerciseInfo = new StringBuilder();
                             exerciseInfo.append("Exercise: ").append(exerciseName).append("\n")
+                                        .append("Username: ").append(exerciseUsername).append("\n")
                                         .append("Type: ").append(exerciseType).append("\n")
                                         .append("Location: ").append(exerciseLocation).append("\n")
                                         .append("Minutes: ").append(exerciseMinutes).append("\n")
