@@ -750,9 +750,35 @@ public class ProfileFragment extends Fragment {
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
         try {
             ExifInterface exif = new ExifInterface(imagePath);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
             Matrix matrix = new Matrix();
-            matrix.setRotate(exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL));
-            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+            int rotation = requireActivity().getWindowManager().getDefaultDisplay().getRotation();
+
+            if (orientation == ExifInterface.ORIENTATION_UNDEFINED) {
+                // If orientation is undefined, use device rotation
+                if (rotation == Surface.ROTATION_0) {
+                    matrix.setRotate(270);
+                } else {
+                    matrix.setRotate(180);
+                }
+            } else {
+                // Rotate the image based on EXIF orientation
+                if (ExifInterface.ORIENTATION_ROTATE_270 == orientation) {
+                    matrix.preScale(-1, 1);
+                    matrix.postRotate(90);
+                } else if (ExifInterface.ORIENTATION_ROTATE_180 == orientation) {
+                    matrix.preScale(-1, 1);
+                    matrix.postRotate(180);
+                } else if (ExifInterface.ORIENTATION_ROTATE_90 == orientation) {
+                    matrix.postRotate(0);
+                }
+            }
+
+            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(),
+                    matrix, true);
+
         } catch (IOException e) {
             Log.e("ProfileFragment", "Error adjusting image rotation", e);
             return bitmap;
