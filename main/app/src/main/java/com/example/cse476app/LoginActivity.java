@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
-    private EditText editUsername, editEmail, editPassword;
+    private EditText editEmail, editPassword;
     private FirebaseAuth mAuth;
     private DatabaseReference mDbRef;
 
@@ -52,13 +52,12 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         mAuth = FirebaseAuth.getInstance();
-        editUsername = findViewById(R.id.editUsername);
         editEmail = findViewById(R.id.editUsername);
         editPassword = findViewById(R.id.editTextPassword);
 
         SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
         String username = prefs.getString("username", "");
-        editUsername.setText(username);
+        editEmail.setText(username);
     }
 
     // Method for registering a new user
@@ -72,24 +71,30 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         mAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this, task -> {
-                if (task.isSuccessful()) {
-                    // Registration successful
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    Toast.makeText(LoginActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
-                    updateUI(user);
-                } else {
-                    // Registration failed
-                    Toast.makeText(LoginActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            String uid = user.getUid();
+                            mDbRef = FirebaseDatabase.getInstance().getReference();
+                            Map<String, String> userMap = new HashMap<>();
+                            userMap.put("username", editEmail.getText().toString().trim());
 
-        mDbRef = FirebaseDatabase.getInstance().getReference();
-        Map<String, String> userMap = new HashMap<>();
-        userMap.put("username", editUsername.getText().toString().trim());
-
-        // Push user to db instance
-        mDbRef.child("users").child(Objects.requireNonNull(mAuth.getUid())).setValue(userMap);
+                            mDbRef.child("users").child(uid).setValue(userMap)
+                                    .addOnCompleteListener(task1 -> {
+                                        if (task1.isSuccessful()) {
+                                            Toast.makeText(LoginActivity.this, "User data added to database", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(LoginActivity.this, "Database write failed: " + task1.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+                        Toast.makeText(LoginActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
+                        updateUI(user);
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     // Method for logging in an existing user
@@ -119,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
     // Redirect to main activity upon successful login or registration
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            String username = editUsername.getText().toString().trim();
+            String username = editEmail.getText().toString().trim();
             if (!username.isEmpty()) {
                 // Store username in SharedPreferences
                 SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);

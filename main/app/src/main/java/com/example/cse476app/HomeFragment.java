@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -51,6 +52,8 @@ public class HomeFragment extends Fragment {
         Button loginButton = view.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this::goToLogin);
 
+        Button logoutButton = view.findViewById(R.id.logoutButton);
+        logoutButton.setOnClickListener(this::logoutUser);
         return view;
     }
 
@@ -119,4 +122,17 @@ public class HomeFragment extends Fragment {
         Intent intent = new Intent(requireActivity(), LoginActivity.class);
         startActivity(intent);
     }
+
+    public void logoutUser(View view) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() != null) {
+            mAuth.signOut();
+            Toast.makeText(requireContext(), "Logged out successfully!", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(requireActivity(), LoginActivity.class);
+            startActivity(intent);
+            requireActivity().finish();
+        } else {
+            Toast.makeText(requireContext(), "You are not signed in!", Toast.LENGTH_SHORT).show();
+        }    }
 }

@@ -39,4 +39,5 @@
     <string name="profile_image">Profile Image</string>
     <string name="profile_fragment">ProfileFragment</string>
     <string name="error_camera">Error starting camera</string>
+    <string name="logout">Logout</string>
 </resources>
