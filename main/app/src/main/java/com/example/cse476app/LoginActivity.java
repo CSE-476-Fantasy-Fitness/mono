@@ -55,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         editEmail = findViewById(R.id.editUsername);
         editPassword = findViewById(R.id.editTextPassword);
 
+        findViewById(R.id.forgotPasswordText).setOnClickListener(view -> sendPasswordResetEmail());
         SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
         String username = prefs.getString("username", "");
         editEmail.setText(username);
@@ -138,5 +139,23 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+    }
+
+    private void sendPasswordResetEmail() {
+        String email = editEmail.getText().toString().trim();
+
+        if (email.isEmpty()) {
+            Toast.makeText(this, "Please enter your email address to reset your password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(LoginActivity.this, "Password reset email sent!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

@@ -10,6 +10,21 @@
     android:padding="16dp"
     tools:context=".LoginActivity">
 
+    <!-- Logo -->
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="86dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="69dp"
+        android:layout_marginBottom="55dp"
+        android:contentDescription="@string/fantasy_fitness_logo"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/fantasy_logo" />
+
+    <!-- Login Card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
@@ -28,6 +43,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- Login Title -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -37,6 +53,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
+            <!-- Username Field -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
@@ -52,11 +69,12 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Password Field -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="16dp"
                 android:hint="@string/password"
                 app:passwordToggleEnabled="true">
 
@@ -68,6 +86,19 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Forgot Password Text -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/forgotPasswordText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/forgot_password"
+                android:textSize="14sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center" />
+
             <!-- Login Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/loginButton"
@@ -77,6 +108,7 @@
                 android:text="@string/login"
                 app:cornerRadius="8dp" />
 
+            <!-- Register Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/registerButton"
                 android:layout_width="match_parent"
@@ -89,18 +121,5 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="86dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="69dp"
-        android:layout_marginBottom="55dp"
-        android:contentDescription="@string/fantasy_fitness_logo"
-        app:layout_constraintBottom_toTopOf="@+id/cardView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/fantasy_logo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
