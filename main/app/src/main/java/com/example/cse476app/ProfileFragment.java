@@ -1,5 +1,7 @@
 package com.example.cse476app;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -44,13 +46,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment  {
     private PreviewView mPreviewView;
     private ImageView mProfileImage;
     private Button mButtonShowCameraPreview;
@@ -93,6 +97,8 @@ public class ProfileFragment extends Fragment {
                     }
                 }
         );
+
+        SharedPreferences prefs = requireActivity().getSharedPreferences("AppPrefs", MODE_PRIVATE);
     }
 
     @Override
@@ -145,8 +151,14 @@ public class ProfileFragment extends Fragment {
     }
 
     private void displayUsername() {
-        String username = "Guest";//sharedPreferences.getString("username", "Guest");
-        mTextView.setText(getString(R.string.welcome_user, username));
+        SharedPreferences prefs = requireActivity().getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        String username = prefs.getString("username", "");
+        if (!username.isEmpty()) {
+            username = getString(R.string.welcome_user, username);
+        } else {
+            username = "Guest";
+        }
+        mTextView.setText(username);
     }
 
     private void displayUserExercises() {
